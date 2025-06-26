@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: course-recommendation-bot
+    env: python
+    buildCommand: ""
+    startCommand: waitress-serve --port=$PORT app:app
+    region: oregon
