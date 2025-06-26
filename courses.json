@@ -1,0 +1,254 @@
+[
+  {
+    "title": "Machine Learning Specialization",
+    "domain": "Machine Learning",
+    "level": "Beginner",
+    "description": "Supervised learning, regression, and classification techniques using scikit-learn",
+    "keywords": ["machine learning", "supervised learning", "regression", "classification", "scikit-learn", "ml", "ai"]
+  },
+  {
+    "title": "Applied Machine Learning with Scikit-Learn",
+    "domain": "Machine Learning",
+    "level": "Advanced",
+    "description": "Model tuning, cross-validation, ensemble methods, and bias-variance tradeoff",
+    "keywords": ["machine learning", "model tuning", "cross-validation", "ensemble methods", "random forest", "gradient boosting", "scikit-learn"]
+  },
+  {
+    "title": "Unsupervised Learning in Practice",
+    "domain": "Machine Learning",
+    "level": "Intermediate",
+    "description": "Unsupervised learning including clustering and dimensionality reduction with real-world data",
+    "keywords": ["unsupervised learning", "clustering", "k-means", "dimensionality reduction", "pca", "data mining"]
+  },
+  {
+    "title": "Neural Networks and Deep Learning",
+    "domain": "Deep Learning",
+    "level": "Beginner",
+    "description": "Neural networks with PyTorch and TensorFlow, backpropagation, and activation functions",
+    "keywords": ["neural networks", "deep learning", "pytorch", "tensorflow", "backpropagation", "activation functions", "ai"]
+  },
+  {
+    "title": "Computer Vision with CNNs",
+    "domain": "Deep Learning",
+    "level": "Advanced",
+    "description": "Convolutional Neural Networks (CNNs) for image classification and object detection",
+    "keywords": ["computer vision", "cnn", "convolutional neural networks", "image classification", "object detection", "opencv"]
+  },
+  {
+    "title": "Sequence Models with LSTM",
+    "domain": "Deep Learning",
+    "level": "Intermediate",
+    "description": "Recurrent Neural Networks (RNNs), LSTMs, and sequence modeling tasks",
+    "keywords": ["sequence models", "lstm", "rnn", "time series", "natural language processing", "sentiment analysis"]
+  },
+  {
+    "title": "Natural Language Processing with Transformers",
+    "domain": "Natural Language Processing",
+    "level": "Advanced",
+    "description": "Transformers, BERT, and GPT models for text classification and generation",
+    "keywords": ["nlp", "natural language processing", "transformers", "bert", "gpt", "text classification", "text generation"]
+  },
+  {
+    "title": "Applied Text Mining in Python",
+    "domain": "Natural Language Processing",
+    "level": "Intermediate",
+    "description": "Text preprocessing, tokenization, and sentiment analysis using spaCy and NLTK",
+    "keywords": ["text mining", "nlp", "sentiment analysis", "spacy", "nltk", "tokenization", "text processing"]
+  },
+  {
+    "title": "Named Entity Recognition and QA",
+    "domain": "Natural Language Processing",
+    "level": "Advanced",
+    "description": "Named Entity Recognition (NER), question answering, and language modeling",
+    "keywords": ["ner", "named entity recognition", "question answering", "language models", "nlp", "information extraction"]
+  },
+  {
+    "title": "Full-Stack Web Development with React",
+    "domain": "Web Development",
+    "level": "Intermediate",
+    "description": "React.js, component lifecycle, state management, and hooks",
+    "keywords": ["web development", "react", "javascript", "frontend", "hooks", "state management", "fullstack"]
+  },
+  {
+    "title": "Modern JavaScript for Developers",
+    "domain": "Web Development",
+    "level": "Beginner",
+    "description": "HTML, CSS, JavaScript fundamentals with responsive UI design",
+    "keywords": ["javascript", "html", "css", "frontend", "web development", "responsive design", "ui"]
+  },
+  {
+    "title": "Backend APIs with Node and Express",
+    "domain": "Web Development",
+    "level": "Advanced",
+    "description": "Backend with Node.js, Express.js, and RESTful API development",
+    "keywords": ["node.js", "express", "backend", "api", "rest", "server", "web development"]
+  },
+  {
+    "title": "Introduction to Computer Vision",
+    "domain": "Computer Vision",
+    "level": "Beginner",
+    "description": "Image processing with OpenCV and CNN-based classification tasks",
+    "keywords": ["computer vision", "opencv", "image processing", "cnn", "image classification", "ai", "deep learning"]
+  },
+  {
+    "title": "Real-Time Object Detection with YOLO",
+    "domain": "Computer Vision",
+    "level": "Advanced",
+    "description": "Object detection with YOLO, SSD, and segmentation techniques",
+    "keywords": ["object detection", "yolo", "ssd", "segmentation", "computer vision", "deep learning", "real-time"]
+  },
+  {
+    "title": "Deep Learning for Vision Tasks",
+    "domain": "Computer Vision",
+    "level": "Intermediate",
+    "description": "Facial recognition, pose estimation, and real-time video processing",
+    "keywords": ["deep learning", "computer vision", "facial recognition", "pose estimation", "video processing", "ai", "cnn"]
+  },
+  {
+    "title": "Data Analysis with Python",
+    "domain": "Data Science",
+    "level": "Advanced",
+    "description": "Exploratory data analysis (EDA) with pandas and matplotlib",
+    "keywords": ["data analysis", "eda", "pandas", "matplotlib", "python", "data science", "data visualization"]
+  },
+  {
+    "title": "Statistics and Hypothesis Testing",
+    "domain": "Data Science",
+    "level": "Intermediate",
+    "description": "Statistical inference, hypothesis testing, and data cleaning techniques",
+    "keywords": ["statistics", "hypothesis testing", "data cleaning", "data science", "probability", "inference", "p-values"]
+  },
+  {
+    "title": "Data Visualization with Plotly",
+    "domain": "Data Science",
+    "level": "Beginner",
+    "description": "Data visualization using seaborn and interactive dashboards with Plotly",
+    "keywords": ["data visualization", "plotly", "seaborn", "dashboards", "python", "data science", "charts"]
+  },
+  {
+    "title": "Intro to Cybersecurity Tools",
+    "domain": "Cybersecurity",
+    "level": "Beginner",
+    "description": "Network security, encryption, and secure communication protocols",
+    "keywords": ["cybersecurity", "network security", "encryption", "ssl", "tls", "security", "hacking"]
+  },
+  {
+    "title": "Ethical Hacking and Penetration Testing",
+    "domain": "Cybersecurity",
+    "level": "Advanced",
+    "description": "Penetration testing, vulnerability assessment, and ethical hacking",
+    "keywords": ["ethical hacking", "penetration testing", "cybersecurity", "vulnerability", "kali linux", "security", "red team"]
+  },
+  {
+    "title": "Cyber Threat Intelligence",
+    "domain": "Cybersecurity",
+    "level": "Intermediate",
+    "description": "Cyber threat intelligence and incident response strategies",
+    "keywords": ["cyber threat", "threat intelligence", "incident response", "security", "cybersecurity", "malware", "siem"]
+  },
+  {
+    "title": "Python for Beginners",
+    "domain": "Programming Languages",
+    "level": "Beginner",
+    "description": "Python basics, data structures, and functional programming",
+    "keywords": ["python", "programming", "beginner", "data structures", "functions", "loops", "variables"]
+  },
+  {
+    "title": "Modern C++ Programming",
+    "domain": "Programming Languages",
+    "level": "Intermediate",
+    "description": "C++ OOP, memory management, and STL containers",
+    "keywords": ["c++", "oop", "memory management", "stl", "programming", "pointers", "templates"]
+  },
+  {
+    "title": "Java Multithreading and Collections",
+    "domain": "Programming Languages",
+    "level": "Advanced",
+    "description": "Java exception handling, multithreading, and collections framework",
+    "keywords": ["java", "multithreading", "collections", "exception handling", "programming", "concurrency", "jvm"]
+  },
+  {
+    "title": "AWS Certified Solutions Architect",
+    "domain": "Cloud Computing",
+    "level": "Beginner",
+    "description": "AWS core services: EC2, S3, Lambda, IAM",
+    "keywords": ["aws", "cloud", "ec2", "s3", "lambda", "iam", "cloud computing"]
+  },
+  {
+    "title": "Azure DevOps Engineer Bootcamp",
+    "domain": "Cloud Computing",
+    "level": "Intermediate",
+    "description": "Azure DevOps, containerization, and deployment strategies",
+    "keywords": ["azure", "devops", "cloud", "containerization", "ci/cd", "microsoft", "cloud computing"]
+  },
+  {
+    "title": "Cloud Architecture with GCP and Kubernetes",
+    "domain": "Cloud Computing",
+    "level": "Advanced",
+    "description": "Google Cloud functions, Kubernetes, and cloud architecture design",
+    "keywords": ["gcp", "kubernetes", "cloud architecture", "google cloud", "containers", "microservices", "serverless"]
+  },
+  {
+    "title": "SQL Databases with MySQL",
+    "domain": "Databases",
+    "level": "Beginner",
+    "description": "Relational databases with MySQL and PostgreSQL",
+    "keywords": ["sql", "mysql", "postgresql", "databases", "relational", "queries", "tables"]
+  },
+  {
+    "title": "NoSQL Essentials with MongoDB",
+    "domain": "Databases",
+    "level": "Intermediate",
+    "description": "NoSQL with MongoDB and indexing strategies",
+    "keywords": ["nosql", "mongodb", "databases", "document database", "indexing", "json", "scalability"]
+  },
+  {
+    "title": "Advanced SQL for Data Analysts",
+    "domain": "Databases",
+    "level": "Advanced",
+    "description": "Database normalization, transactions, and SQL optimization",
+    "keywords": ["sql", "advanced", "normalization", "transactions", "optimization", "indexing", "query tuning"]
+  },
+  {
+    "title": "Introduction to DevOps Practices",
+    "domain": "DevOps",
+    "level": "Beginner",
+    "description": "DevOps principles, CI/CD pipelines, and version control with Git",
+    "keywords": ["devops", "ci/cd", "git", "version control", "agile", "automation", "deployment"]
+  },
+  {
+    "title": "Docker and Container Orchestration",
+    "domain": "DevOps",
+    "level": "Intermediate",
+    "description": "Docker containers, orchestration with Kubernetes, and microservices architecture",
+    "keywords": ["docker", "kubernetes", "containers", "orchestration", "microservices", "devops", "cloud"]
+  },
+  {
+    "title": "Infrastructure as Code with Terraform",
+    "domain": "DevOps",
+    "level": "Advanced",
+    "description": "Infrastructure automation using Terraform and cloud provisioning",
+    "keywords": ["terraform", "iac", "infrastructure as code", "devops", "automation", "cloud", "provisioning"]
+  },
+  {
+    "title": "Introduction to Blockchain Technology",
+    "domain": "Blockchain",
+    "level": "Beginner",
+    "description": "Blockchain fundamentals, smart contracts, and decentralized applications",
+    "keywords": ["blockchain", "smart contracts", "dapps", "decentralized", "crypto", "ethereum", "distributed ledger"]
+  },
+  {
+    "title": "Ethereum Smart Contracts with Solidity",
+    "domain": "Blockchain",
+    "level": "Advanced",
+    "description": "Smart contract development on Ethereum using Solidity",
+    "keywords": ["ethereum", "solidity", "smart contracts", "blockchain", "web3", "dapps", "defi"]
+  },
+  {
+    "title": "Hyperledger Fabric for Enterprise Solutions",
+    "domain": "Blockchain",
+    "level": "Intermediate",
+    "description": "Hyperledger Fabric architecture, chaincode development, and deployment",
+    "keywords": ["hyperledger", "fabric", "blockchain", "enterprise", "chaincode", "permissioned", "distributed ledger"]
+  }
+]

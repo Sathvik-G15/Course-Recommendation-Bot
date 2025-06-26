@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Recommendation Bot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3a0ca3;
+      --accent: #f72585;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.6;
+      color: var(--dark);
+      background-color: #f5f7ff;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      color: var(--secondary);
+      text-align: center;
+      margin-bottom: 30px;
+      position: relative;
+    }
+    
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: 2px;
+    }
+    
+    .search-container {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      margin-bottom: 30px;
+    }
+    
+    input, button {
+      border-radius: 8px;
+      padding: 12px 15px;
+      font-size: 16px;
+      width: 100%;
+      border: 2px solid #e9ecef;
+      transition: all 0.3s ease;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+    
+    button {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      margin-top: 15px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    #loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      color: var(--primary);
+      font-size: 18px;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(0,0,0,0.1);
+      border-radius: 50%;
+      border-top: 4px solid var(--primary);
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .course-card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border-left: 4px solid var(--primary);
+      transition: all 0.3s ease;
+    }
+    
+    .course-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    
+    .course-card h3 {
+      color: var(--secondary);
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+    
+    .course-meta {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .badge {
+      background: #e9ecef;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 14px;
+      color: var(--dark);
+    }
+    
+    .domain {
+      background: #e0fbfc;
+      color: #1b4965;
+    }
+    
+    .level {
+      background: #e2eafc;
+      color: #1b3a8f;
+    }
+    
+    .keywords {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0;
+    }
+    
+    .keyword {
+      background: #f8f9fa;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      color: var(--gray);
+    }
+    
+    .match-reason {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      border-left: 3px solid var(--accent);
+    }
+    
+    .similarity {
+      float: right;
+      color: var(--primary);
+      font-weight: 500;
+    }
+    
+    @media (max-width: 600px) {
+      body {
+        padding: 15px;
+      }
+      
+      .course-meta {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>📚 Smart Course Recommender</h1>
+  
+  <div class="search-container">
+    <input type="text" id="query" placeholder="What do you want to learn? (e.g. machine learning, web development)" autocomplete="off">
+    <button onclick="sendQuery()">Find Courses</button>
+  </div>
+
+  <div id="loading">
+    <div class="spinner"></div>
+    Finding the best courses for you...
+  </div>
+  
+  <div id="recommendations"></div>
+
+  <script>
+    async function sendQuery() {
+      const query = document.getElementById("query").value.trim();
+      const loading = document.getElementById("loading");
+      const container = document.getElementById("recommendations");
+
+      if (!query) {
+        alert("Please enter what you want to learn");
+        return;
+      }
+
+      loading.style.display = "block";
+      container.innerHTML = "";
+
+      try {
+        const res = await fetch("/recommend", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query })
+        });
+
+        if (!res.ok) throw new Error("Network response was not ok");
+        
+        const data = await res.json();
+
+        if (data.recommendations.length === 0) {
+          container.innerHTML = `
+            <div class="course-card">
+              <h3>No courses found</h3>
+              <p>We couldn't find courses matching "${query}". Try different keywords.</p>
+            </div>
+          `;
+          return;
+        }
+
+        data.recommendations.forEach(course => {
+          const card = document.createElement("div");
+          card.className = "course-card";
+          card.innerHTML = `
+            <h3>${course.title}</h3>
+            <div class="course-meta">
+              <span class="badge domain">${course.domain}</span>
+              <span class="badge level">${course.level}</span>
+              <span class="similarity">${Math.round(course.similarity * 100)}% match</span>
+            </div>
+            ${course.keywords && course.keywords.length > 0 ? `
+              <div class="keywords">
+                ${course.keywords.map(keyword => `<span class="keyword">${keyword}</span>`).join('')}
+              </div>
+            ` : ''}
+            <p>${course.description}</p>
+            
+          `;
+          container.appendChild(card);
+        });
+
+      } catch (err) {
+        container.innerHTML = `
+          <div class="course-card">
+            <h3>Error</h3>
+            <p>Couldn't load recommendations. Please try again later.</p>
+          </div>
+        `;
+        console.error("Error:", err);
+      } finally {
+        loading.style.display = "none";
+      }
+    }
+
+    // Add keyboard support
+    document.getElementById("query").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") sendQuery();
+    });
+  </script>
+</body>
+</html>
