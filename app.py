@@ -1,3 +1,4 @@
+
 import os
 import json
 import re
@@ -8,6 +9,20 @@ from transformers import pipeline
 
 app = Flask(__name__)
 CORS(app)
+
+# Load models once on startup
+embedder = SentenceTransformer("intfloat/e5-small-v2")
+generator = pipeline("text2text-generation", model="google/flan-t5-small")
+
+# Load course data and precompute embeddings
+with open("courses.json", "r") as f:
+    courses_list = json.load(f)
+
+descriptions = [
+    f"passage: {course['title']} - {course['domain']} - {course['description']} - Keywords: {', '.join(course.get('keywords', []))}"
+    for course in courses_list
+]
+course_embeddings = embedder.encode(descriptions, convert_to_tensor=True)
 
 @app.route("/", methods=["GET"])
 def index():
@@ -22,19 +37,6 @@ def recommend():
     raw_query = request.json.get("query", "").strip()
     if not raw_query:
         return jsonify({"error": "Please enter a learning interest."}), 400
-
-    # Load data and models on-demand to stay within memory limits
-    with open("courses.json", "r") as f:
-        courses_list = json.load(f)
-
-    embedder = SentenceTransformer("intfloat/e5-small-v2")  # lighter model
-    generator = pipeline("text2text-generation", model="google/flan-t5-small")  # lighter model
-
-    descriptions = [
-        f"passage: {course['title']} - {course['domain']} - {course['description']} - Keywords: {', '.join(course.get('keywords', []))}"
-        for course in courses_list
-    ]
-    course_embeddings = embedder.encode(descriptions, convert_to_tensor=True)
 
     query_terms = re.findall(r'\b\w{3,}\b', raw_query.lower())
     query_embedding = embedder.encode(
@@ -57,7 +59,7 @@ def recommend():
         Description: {course['description']}
         Keywords: {', '.join(course.get('keywords', []))}
         Explain in one sentence why this course matches:"""
-        
+
         try:
             message = generator(prompt, max_length=60)[0]['generated_text']
         except:
