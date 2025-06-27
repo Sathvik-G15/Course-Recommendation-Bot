@@ -6,3 +6,4 @@ torch>=1.10.0
 waitress==2.1.2
 python-dotenv==1.0.0
 tokenizers==0.13.3
+python==3.10.x
