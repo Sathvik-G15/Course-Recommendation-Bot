@@ -1,7 +1,7 @@
 import os
 import json
 import re
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from sentence_transformers import SentenceTransformer, util
 from transformers import pipeline
@@ -9,18 +9,26 @@ from transformers import pipeline
 app = Flask(__name__)
 CORS(app)
 
+@app.route("/", methods=["GET"])
+def index():
+    return send_from_directory(directory=".", path="index.html")
+
+@app.route("/<path:path>")
+def static_files(path):
+    return send_from_directory(".", path)
+
 @app.route("/recommend", methods=["POST"])
 def recommend():
     raw_query = request.json.get("query", "").strip()
     if not raw_query:
         return jsonify({"error": "Please enter a learning interest."}), 400
 
-    # Load data and models on-demand
+    # Load data and models on-demand to stay within memory limits
     with open("courses.json", "r") as f:
         courses_list = json.load(f)
 
-    embedder = SentenceTransformer("intfloat/e5-small-v2")  # much lighter than 'large'
-    generator = pipeline("text2text-generation", model="google/flan-t5-small")  # smaller model
+    embedder = SentenceTransformer("intfloat/e5-small-v2")  # lighter model
+    generator = pipeline("text2text-generation", model="google/flan-t5-small")  # lighter model
 
     descriptions = [
         f"passage: {course['title']} - {course['domain']} - {course['description']} - Keywords: {', '.join(course.get('keywords', []))}"
@@ -42,7 +50,7 @@ def recommend():
     candidates.sort(key=lambda x: x[1], reverse=True)
 
     recommendations = []
-    for idx, score in candidates[:3]:  # Top 3 to save memory
+    for idx, score in candidates[:3]:
         course = courses_list[idx]
         prompt = f"""User wants to learn: {raw_query}.
         Course: {course['title']} ({course['domain']}, {course['level']})
