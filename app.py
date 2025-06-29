@@ -11,8 +11,8 @@ CORS(app)
 # Configuration
 app.config['MAX_RECOMMENDATIONS'] = int(os.getenv('MAX_RECOMMENDATIONS', 3))
 
-# Load embedding model (no custom cache folder)
-embedder = SentenceTransformer("sentence-transformers/nli-distilroberta-base-v2")
+# Load light model
+embedder = SentenceTransformer("all-MiniLM-L6-v2")
 
 # Load courses
 with open("courses.json", "r") as f:
@@ -25,7 +25,7 @@ descriptions = [
 ]
 course_embeddings = embedder.encode(descriptions, convert_to_tensor=True)
 
-# Abbreviation expansion
+# Expand common abbreviations in user input
 def expand_abbreviations(text):
     abbreviations = {
         "ml": "machine learning",
@@ -51,15 +51,16 @@ def expand_abbreviations(text):
     }
     words = text.lower().split()
     expanded = [abbreviations.get(word, word) for word in words]
-    return " ".join(expanded)
+    return " ".join([w for w in expanded if isinstance(w, str)])
 
-# Generate explanation message
+# Generate message for each match
 def generate_reason(query, course):
     return f"This course matches your interest in '{query}' based on topics like {', '.join(course.get('keywords', [])[:3])}."
 
 @app.route("/recommend", methods=["POST"])
 def recommend():
-    raw_query = request.json.get("query", "").strip()
+    data = request.get_json(silent=True) or {}
+    raw_query = data.get("query", "").strip()
     if not raw_query:
         return jsonify({"error": "Please enter a learning interest."}), 400
 
@@ -94,11 +95,8 @@ def recommend():
         "recommendations": recommendations or [],
         "query": raw_query
     })
+
 if __name__ == "__main__":
     from waitress import serve
-    import os
-    port = int(os.environ.get("PORT", 5000))  # Render sets this
+    port = int(os.environ.get("PORT", 5000))  # Required for Render
     serve(app, host="0.0.0.0", port=port)
-
-
-
