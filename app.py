@@ -4,21 +4,15 @@ import re
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from sentence_transformers import SentenceTransformer, util
-from functools import lru_cache
 
 app = Flask(__name__)
 CORS(app)
 
 # Configuration
-app.config['MODEL_CACHE_DIR'] = os.getenv('MODEL_CACHE_DIR', './model_cache')
 app.config['MAX_RECOMMENDATIONS'] = int(os.getenv('MAX_RECOMMENDATIONS', 3))
 
-# Load embedding model
-@lru_cache(maxsize=None)
-def load_model():
-    return SentenceTransformer("sentence-transformers/nli-distilroberta-base-v2", cache_folder=app.config['MODEL_CACHE_DIR'])
-
-embedder = load_model()
+# Load embedding model (no custom cache folder)
+embedder = SentenceTransformer("sentence-transformers/nli-distilroberta-base-v2")
 
 # Load courses
 with open("courses.json", "r") as f:
@@ -53,16 +47,15 @@ def expand_abbreviations(text):
         "html": "hypertext markup language",
         "css": "cascading style sheets",
         "oop": "object oriented programming",
-        "stl": "standard template library",
-        "dsa": "data structures and algorithms"
+        "stl": "standard template library"
     }
     words = text.lower().split()
     expanded = [abbreviations.get(word, word) for word in words]
     return " ".join(expanded)
 
-# Simple reason generator
+# Generate explanation message
 def generate_reason(query, course):
-    return f"This course matches your interest in '{query}' based on its coverage of topics like {', '.join(course.get('keywords', [])[:3])}."
+    return f"This course matches your interest in '{query}' based on topics like {', '.join(course.get('keywords', [])[:3])}."
 
 @app.route("/recommend", methods=["POST"])
 def recommend():
@@ -102,4 +95,6 @@ def recommend():
         "query": raw_query
     })
 
-
+if __name__ == "__main__":
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=5000)
