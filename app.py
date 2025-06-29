@@ -1,36 +1,68 @@
-
 import os
 import json
 import re
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from sentence_transformers import SentenceTransformer, util
-from transformers import pipeline
+from functools import lru_cache
 
 app = Flask(__name__)
 CORS(app)
 
-# Load models once on startup
-embedder = SentenceTransformer("intfloat/e5-small-v2")
-generator = pipeline("text2text-generation", model="google/flan-t5-small")
+# Configuration
+app.config['MODEL_CACHE_DIR'] = os.getenv('MODEL_CACHE_DIR', './model_cache')
+app.config['MAX_RECOMMENDATIONS'] = int(os.getenv('MAX_RECOMMENDATIONS', 3))
 
-# Load course data and precompute embeddings
+# Load embedding model
+@lru_cache(maxsize=None)
+def load_model():
+    return SentenceTransformer("sentence-transformers/nli-distilroberta-base-v2", cache_folder=app.config['MODEL_CACHE_DIR'])
+
+embedder = load_model()
+
+# Load courses
 with open("courses.json", "r") as f:
     courses_list = json.load(f)
 
+# Prepare embeddings
 descriptions = [
-    f"passage: {course['title']} - {course['domain']} - {course['description']} - Keywords: {', '.join(course.get('keywords', []))}"
+    f"{course['title']} - {course['domain']} - {course['description']} - Keywords: {', '.join(course.get('keywords', []))}"
     for course in courses_list
 ]
 course_embeddings = embedder.encode(descriptions, convert_to_tensor=True)
 
-@app.route("/", methods=["GET"])
-def index():
-    return send_from_directory(directory=".", path="index.html")
+# Abbreviation expansion
+def expand_abbreviations(text):
+    abbreviations = {
+        "ml": "machine learning",
+        "ai": "artificial intelligence",
+        "cv": "computer vision",
+        "dl": "deep learning",
+        "nlp": "natural language processing",
+        "cnn": "convolutional neural networks",
+        "rnn": "recurrent neural networks",
+        "qa": "question answering",
+        "eda": "exploratory data analysis",
+        "sql": "structured query language",
+        "js": "javascript",
+        "db": "database",
+        "api": "application programming interface",
+        "devops": "development operations",
+        "gcp": "google cloud platform",
+        "aws": "amazon web services",
+        "html": "hypertext markup language",
+        "css": "cascading style sheets",
+        "oop": "object oriented programming",
+        "stl": "standard template library",
+        "dsa": "data structures and algorithms"
+    }
+    words = text.lower().split()
+    expanded = [abbreviations.get(word, word) for word in words]
+    return " ".join(expanded)
 
-@app.route("/<path:path>")
-def static_files(path):
-    return send_from_directory(".", path)
+# Simple reason generator
+def generate_reason(query, course):
+    return f"This course matches your interest in '{query}' based on its coverage of topics like {', '.join(course.get('keywords', [])[:3])}."
 
 @app.route("/recommend", methods=["POST"])
 def recommend():
@@ -38,40 +70,36 @@ def recommend():
     if not raw_query:
         return jsonify({"error": "Please enter a learning interest."}), 400
 
-    query_terms = re.findall(r'\b\w{3,}\b', raw_query.lower())
+    expanded_query = expand_abbreviations(raw_query)
+    query_terms = re.findall(r'\b\w{3,}\b', expanded_query)
+
     query_embedding = embedder.encode(
-        f"query: Find courses about {raw_query.lower()} covering {', '.join(query_terms)}",
+        f"{expanded_query} {', '.join(query_terms)}",
         convert_to_tensor=True
     )
 
     similarities = util.cos_sim(query_embedding, course_embeddings)[0]
     candidates = [
         (idx, score.item()) for idx, score in enumerate(similarities)
-        if score.item() > 0.5
+        if score.item() > 0.4
     ]
     candidates.sort(key=lambda x: x[1], reverse=True)
 
     recommendations = []
-    for idx, score in candidates[:3]:
+    for idx, score in candidates[:5]:
         course = courses_list[idx]
-        prompt = f"""User wants to learn: {raw_query}.
-        Course: {course['title']} ({course['domain']}, {course['level']})
-        Description: {course['description']}
-        Keywords: {', '.join(course.get('keywords', []))}
-        Explain in one sentence why this course matches:"""
-
-        try:
-            message = generator(prompt, max_length=60)[0]['generated_text']
-        except:
-            message = f"Relevant to {raw_query} based on your interests."
-
+        message = generate_reason(raw_query, course)
         recommendations.append({
             **course,
             "similarity": round(score, 3),
             "message": message
         })
+        if len(recommendations) >= app.config['MAX_RECOMMENDATIONS']:
+            break
 
     return jsonify({
         "recommendations": recommendations or [],
         "query": raw_query
     })
+
+
